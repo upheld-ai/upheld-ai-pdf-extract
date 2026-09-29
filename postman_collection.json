@@ -1,0 +1,347 @@
+{
+  "info": {
+    "_postman_id": "c1f7a8b4-8e3d-4c5b-9b12-d8f7e2a9b3c4",
+    "name": "Upheld AI PDF Extract API",
+    "description": "Enterprise-grade PDF text, layout, table, and document intelligence extraction API for Upheld AI (powers upheld-ai-statements).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8020",
+      "type": "string"
+    },
+    {
+      "key": "apiToken",
+      "value": "TESTAPIKEK",
+      "type": "string"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{apiToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "Health & Monitoring",
+      "item": [
+        {
+          "name": "Liveness Probe (GET /health/live)",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/health/live",
+              "host": ["{{baseUrl}}"],
+              "path": ["health", "live"]
+            },
+            "description": "Unauthenticated Kubernetes liveness probe confirming process is alive."
+          },
+          "response": []
+        },
+        {
+          "name": "Readiness Probe (GET /health/ready)",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/health/ready",
+              "host": ["{{baseUrl}}"],
+              "path": ["health", "ready"]
+            },
+            "description": "Unauthenticated readiness probe validating PyMuPDF engine C bindings availability."
+          },
+          "response": []
+        },
+        {
+          "name": "System Status & Telemetry (GET /health/status)",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/health/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["health", "status"]
+            },
+            "description": "Returns runtime telemetry including memory RSS (MB), CPU usage, engine version, and service limits."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Legacy Endpoints (upheld-ai-statements)",
+      "item": [
+        {
+          "name": "Legacy Health Check (GET /)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/",
+              "host": ["{{baseUrl}}"],
+              "path": [""]
+            },
+            "description": "100% backward-compatible health check endpoint for upheld-ai-statements."
+          },
+          "response": []
+        },
+        {
+          "name": "Legacy Extract Text (POST /extract-text)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": "",
+                  "description": "Upload a PDF statement"
+                },
+                {
+                  "key": "password",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true,
+                  "description": "Password if encrypted (optional)"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/extract-text",
+              "host": ["{{baseUrl}}"],
+              "path": ["extract-text"]
+            },
+            "description": "Extracts selectable text across all pages. If no selectable text exists, falls back to rendering page images in rendered_pages."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Modern API v1 (Document Intelligence)",
+      "item": [
+        {
+          "name": "Pre-flight Document Inspection (POST /api/v1/inspect)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": "",
+                  "description": "PDF document to inspect"
+                },
+                {
+                  "key": "password",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true,
+                  "description": "PDF password if encrypted"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/inspect",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "inspect"]
+            },
+            "description": "Fast pre-flight inspection returning page count, dimensions, encryption status, per-page character density, and suggested extraction mode (digital/hybrid/images)."
+          },
+          "response": []
+        },
+        {
+          "name": "Multimodal Extraction (POST /api/v1/extract)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": "",
+                  "description": "PDF document to extract"
+                },
+                {
+                  "key": "mode",
+                  "value": "full",
+                  "type": "text",
+                  "description": "Extraction mode: text, layout, tables, hybrid, images, or full"
+                },
+                {
+                  "key": "pages",
+                  "value": "1-3",
+                  "type": "text",
+                  "disabled": true,
+                  "description": "Optional page range filter (e.g., '1-3,5')"
+                },
+                {
+                  "key": "extract_tables",
+                  "value": "true",
+                  "type": "text",
+                  "description": "Whether to extract structured transaction tables"
+                },
+                {
+                  "key": "extract_blocks",
+                  "value": "false",
+                  "type": "text",
+                  "description": "Include bounding box coordinates per text block"
+                },
+                {
+                  "key": "render_images",
+                  "value": "false",
+                  "type": "text",
+                  "description": "Force rasterization of pages to base64 images"
+                },
+                {
+                  "key": "dpi",
+                  "value": "150",
+                  "type": "text",
+                  "disabled": true,
+                  "description": "Rendering DPI (default: 150, max: 300)"
+                },
+                {
+                  "key": "image_format",
+                  "value": "png",
+                  "type": "text",
+                  "disabled": true,
+                  "description": "png, jpeg, or webp"
+                },
+                {
+                  "key": "password",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true,
+                  "description": "Password if encrypted"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/extract",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "extract"]
+            },
+            "description": "Full multimodal extraction returning full text, layout-aware Markdown, structured table grids, page-by-page analysis, and optional image rasterization."
+          },
+          "response": []
+        },
+        {
+          "name": "Structured Table Extraction (POST /api/v1/tables)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": "",
+                  "description": "PDF statement containing tabular transaction ledgers"
+                },
+                {
+                  "key": "pages",
+                  "value": "1-5",
+                  "type": "text",
+                  "disabled": true,
+                  "description": "Page range filter (e.g. '1-3,5')"
+                },
+                {
+                  "key": "password",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true,
+                  "description": "Password if encrypted"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/tables",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "tables"]
+            },
+            "description": "Dedicated fast table extraction returning 2D cell matrices, column headers, bounding boxes, and GitHub-Flavored Markdown tables."
+          },
+          "response": []
+        },
+        {
+          "name": "High-Res Page Rendering (POST /api/v1/render-pages)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": "",
+                  "description": "PDF document to rasterize into images"
+                },
+                {
+                  "key": "pages",
+                  "value": "1",
+                  "type": "text",
+                  "description": "Page range filter (e.g. '1' or '1-3')"
+                },
+                {
+                  "key": "dpi",
+                  "value": "150",
+                  "type": "text",
+                  "description": "Resolution DPI (150-300)"
+                },
+                {
+                  "key": "format",
+                  "value": "png",
+                  "type": "text",
+                  "description": "Image format: png, jpeg, or webp"
+                },
+                {
+                  "key": "password",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true,
+                  "description": "Password if encrypted"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/render-pages",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "render-pages"]
+            },
+            "description": "Renders PDF pages to base64 images for Vision LLM (VLM) pipelines (GPT-4o, Claude 3.5 Sonnet, Gemini 1.5/2.0 Pro)."
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

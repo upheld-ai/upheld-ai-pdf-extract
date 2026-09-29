@@ -17,12 +17,10 @@ Enterprise-grade, high-throughput PDF extraction and document intelligence micro
   - [`POST /api/v1/tables`](#post-apiv1tables)
   - [`POST /api/v1/render-pages`](#post-apiv1render-pages)
   - [`POST /api/v1/inspect`](#post-apiv1inspect)
-  - [Health & Observability Probes](#health--observability-probes)
-- [Document Intelligence for Statements](#document-intelligence-for-statements)
-- [Performance & Concurrency Protection](#performance--concurrency-protection)
+  - [Postman Collection](#postman-collection)
 - [Deployment & Operations](#deployment--operations)
-  - [Docker & Docker Compose](#docker--docker-compose)
-  - [Local Development](#local-development)
+  - [Local Development](#1-local-development)
+  - [Production Deployment](#2-production-deployment)
   - [Configuration Reference](#configuration-reference)
 
 ---
@@ -221,12 +219,18 @@ Fast, lightweight pre-flight inspection without rendering:
 
 ---
 
-### Health & Observability Probes
-- `GET /health/live`: Kubernetes liveness probe (200 OK).
-- `GET /health/ready`: Kubernetes readiness probe (validates PyMuPDF C bindings).
-- `GET /health/status`: Telemetry including RSS memory usage, CPU load, and limits.
+## Postman Collection
 
----
+Pre-configured Postman files are included in the repository root for instantaneous testing:
+- **Collection**: [`postman_collection.json`](postman_collection.json) (covers all legacy and modern v1 endpoints with file upload presets)
+- **Environment**: [`postman_environment.json`](postman_environment.json) (pre-configured with `baseUrl = http://localhost:8020` and `apiToken = TESTAPIKEK`)
+
+### How to Import & Use:
+1. Open **Postman**.
+2. Click **Import** (top left).
+3. Select both `postman_collection.json` and `postman_environment.json`.
+4. In the top-right environment selector, choose **"Upheld AI PDF Extract (Local)"**.
+5. Select any request (e.g. `POST /api/v1/extract`), attach your sample PDF in the **Body -> form-data -> file** field, and click **Send**.
 
 ## Document Intelligence for Statements
 

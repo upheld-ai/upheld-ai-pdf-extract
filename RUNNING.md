@@ -124,6 +124,12 @@ curl -X POST http://localhost:8020/api/v1/tables \
 pytest -v
 ```
 
+### Import into Postman
+You can test all endpoints visually using the provided Postman collection:
+1. Import [`postman_collection.json`](postman_collection.json) and [`postman_environment.json`](postman_environment.json) into Postman.
+2. Select the **Upheld AI PDF Extract (Local)** environment.
+3. Requests for Legacy (`/extract-text`), Health (`/health/*`), and v1 (`/api/v1/extract`, `/api/v1/tables`, `/api/v1/render-pages`, `/api/v1/inspect`) are pre-populated with authorization headers and multipart form presets.
+
 ---
 
 ## 3. Production Deployment (Native / Bare-Metal / VM)
